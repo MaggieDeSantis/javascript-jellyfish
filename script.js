@@ -8,19 +8,21 @@ ctx.lineWidth = 3;
 //jellyfish dome//
 function drawBell() {
 
+    pulse = Math.sin(time) * 10;
+
     ctx.beginPath();
 
     ctx.arc(
-        300, 250, 100, Math.PI, 0 );
+        300, 250, 100 + pulse, Math.PI, 0 );
 
-    ctx.lineTo(375,270);
-    ctx.lineTo(350,250);
-    ctx.lineTo(324,270);
-    ctx.lineTo(300,250);
-    ctx.lineTo(275,270);
-    ctx.lineTo(250,250);
-    ctx.lineTo(225,270);
-    ctx.lineTo(200,250);
+    ctx.lineTo(375 + pulse, 270);
+    ctx.lineTo(350 + pulse, 250);
+    ctx.lineTo(324 + pulse, 270);
+    ctx.lineTo(300, 250);
+    ctx.lineTo(275 - pulse, 270);
+    ctx.lineTo(250 - pulse, 250);
+    ctx.lineTo(225 - pulse, 270);
+    ctx.lineTo(200 - pulse, 250);
 
 
     ctx.closePath();
@@ -32,10 +34,11 @@ function drawBell() {
 }
 //jellyfish danglies//
 let time = 0;
+let pulse = 0;
 
 function drawTentacle(x, length, direction) {
 
-    let sway = Math.sin(time) * 30;
+    let sway = Math.sin(time + x * 0.01) * 30;
 
     ctx.beginPath();
 
@@ -55,9 +58,9 @@ function animate(){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     drawBell();
-    drawTentacle(250, 450, 1);
+    drawTentacle(250 - pulse / 2, 450, 1);
     drawTentacle(300, 475, -1);
-    drawTentacle(350, 450, 1);
+    drawTentacle(350 + pulse /2, 450, 1);
 
     time += 0.005;
 
