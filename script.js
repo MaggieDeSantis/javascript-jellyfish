@@ -13,20 +13,24 @@ function drawBell() {
 
     ctx.beginPath();
 
+    ctx.save();
+    ctx.translate(300, 0);
+    ctx.scale(0.9, 1);
+    ctx.translate(-300, 0);
+
     ctx.arc(
         300, 250, 100 + pulse, Math.PI, 0 );
 
-    ctx.quadraticCurveTo(375 + pulse, 275, 350 + pulse, 255);
+    ctx.quadraticCurveTo(400 + pulse, 270, 350 + pulse, 255);
     ctx.quadraticCurveTo(325 + pulse, 275, 300, 255);
     ctx.quadraticCurveTo(275 - pulse, 275, 250 - pulse, 255);
-    ctx.quadraticCurveTo(225 - pulse, 275, 200 - pulse, 250);
-
-    ctx.closePath();
+    ctx.quadraticCurveTo(200 - pulse, 270, 200 - pulse, 250);
 
     ctx.fillStyle = "rgba(119, 99, 155, 0.9)";
     ctx.fill();
 
     ctx.stroke();
+    ctx.restore();
 }
 //jellyfish danglies//
 let time = 0;
@@ -76,7 +80,7 @@ function drawTentacle(x, length, direction) {
 
 function drawArm(x, direction) {
     
-    let armSway = Math.sin(time + 0.9 * 5) * 9 * direction;
+    let armSway = Math.sin(time + 1 * 5) * 9 * direction;
 
     ctx.beginPath();
 
@@ -112,11 +116,11 @@ function animate(){
     ctx.save();
     ctx.translate(0, floatY);
 
-    drawArm(275, .6);
-    drawArm(325, -.5)
-    drawTentacle(250 - pulse / 2, 450, .5);
-    drawTentacle(300, 475, -1);
-    drawTentacle(350 + pulse / 2, 450, .05);
+    drawArm(275, .9);
+    drawArm(325, -.9)
+    drawTentacle(250 - pulse / 5, 450, .05);
+    drawTentacle(300, 475, 1);
+    drawTentacle(350 + pulse / 1, 450, .05);
     drawBell();
     
     ctx.restore();
