@@ -9,7 +9,7 @@ ctx.lineCap = "round";
 //jellyfish dome//
 function drawBell() {
 
-    pulse = Math.sin(time) * .5;
+    pulse = Math.sin(time) * 1;
 
     ctx.beginPath();
 
@@ -26,11 +26,20 @@ function drawBell() {
     ctx.quadraticCurveTo(275 - pulse, 275, 250 - pulse, 255);
     ctx.quadraticCurveTo(200 - pulse, 270, 200 - pulse, 250);
 
-    ctx.fillStyle = "rgba(119, 99, 155, 0.9)";
+    ctx.fillStyle = "rgba(61, 63, 92, 0.9)";
+    
+    ctx.shadowColor = "rgba(48, 28, 138, 0.83)";
+    ctx.shadowBlur = 45;
+
     ctx.fill();
+    ctx.stroke();
+
+    ctx.shadowColor= "transparent";
+    ctx.shadowBlur = 0;
 
     ctx.stroke();
     ctx.restore();
+
 }
 //jellyfish danglies//
 let time = 0;
@@ -100,7 +109,7 @@ function drawArm(x, direction) {
 
     ctx.closePath();
 
-    ctx.fillStyle = "rgba(180, 140, 255, 0.25)";
+    ctx.fillStyle = "rgba(145, 135, 163, 0.19)";
     ctx.fill();
 
     ctx.stroke();
