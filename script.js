@@ -1,6 +1,47 @@
 const canvas = document.getElementById("jellyfishCanvas");
 const ctx = canvas.getContext("2d");
 
+const particles = [];
+
+for (let i = 0; i < 30; i++) {
+    particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 2 + 1,
+        speed: Math.random() * 0.3 + 0.1
+    });
+}
+
+function drawParticles() {
+
+    ctx.save();
+
+    for (let particle of particles) {
+
+        particle.y -= particle.speed;
+
+        if (particle.y < 0) {
+            particle.y = canvas.height;
+            particle.x = Math.random() * canvas.width;
+        }
+
+        ctx.beginPath();
+
+        ctx.arc(
+            particle.x, 
+            particle.y,
+            particle.size,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fillStyle = "rgba(46, 50, 66, 0.31)";
+        ctx.fill();
+    }
+
+    ctx.restore();
+}
+
 ctx.strokeStyle = "#6e5b7ad3";
 ctx.lineWidth = 2;
 ctx.lineJoin = "round";
@@ -28,7 +69,7 @@ function drawBell() {
 
     ctx.fillStyle = "rgba(61, 63, 92, 0.9)";
     
-    ctx.shadowColor = "rgba(48, 28, 138, 0.83)";
+    ctx.shadowColor = "rgba(110, 64, 97, 0.83)";
     ctx.shadowBlur = 45;
 
     ctx.fill();
@@ -109,7 +150,7 @@ function drawArm(x, direction) {
 
     ctx.closePath();
 
-    ctx.fillStyle = "rgba(145, 135, 163, 0.19)";
+    ctx.fillStyle = "rgba(145, 135, 163, 0.50";
     ctx.fill();
 
     ctx.stroke();
@@ -119,17 +160,21 @@ function drawArm(x, direction) {
 function animate(){
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    drawParticles();
 
-    floatY = Math.sin(time * 0.5) * 10;
+    floatY = Math.sin(time * 0.5) * 15;
     
     ctx.save();
     ctx.translate(0, floatY);
 
     drawArm(275, .9);
     drawArm(325, -.9)
+
     drawTentacle(250 - pulse / 5, 450, .05);
     drawTentacle(300, 475, 1);
     drawTentacle(350 + pulse / 1, 450, .05);
+
     drawBell();
     
     ctx.restore();
