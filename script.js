@@ -35,6 +35,7 @@ function drawBell() {
 //jellyfish danglies//
 let time = 0;
 let pulse = 0;
+let floatY = 0;
 
 function drawTentacle(x, length, direction) {
 
@@ -46,21 +47,50 @@ function drawTentacle(x, length, direction) {
 
     ctx.bezierCurveTo(
         x - 20 + sway, 330,
-        x + 20 - sway, 380,
+        x + 20 - sway, 300,
         x + sway, length
     );
     
     ctx.stroke();
 }
 
+function drawArm(x) {
+    
+    let armSway = Math.sin(time + x * 0.02) * 10;
+
+    ctx.beginPath();
+
+    ctx.moveTo(x, 270);
+
+    ctx.bezierCurveTo(
+        x - 15 + armSway, 300,
+        x + 15 - armSway, 330,
+        x, 370
+    );
+
+    ctx.lineWidth = 8;
+    ctx.stroke();
+
+    ctx.lineWidth = 3;
+}
+
 function animate(){
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    floatY = Math.sin(time * 0.5) * 20;
+    
+    ctx.save();
+    ctx.translate(0, floatY);
+
     drawBell();
+    drawArm(275);
+    drawArm(325)
     drawTentacle(250 - pulse / 2, 450, 1);
     drawTentacle(300, 475, -1);
     drawTentacle(350 + pulse /2, 450, 1);
+
+    ctx.restore();
 
     time += 0.005;
 
@@ -74,7 +104,7 @@ ctx.beginPath();
 ctx.moveTo(300, 260);
 
 ctx.bezierCurveTo(
-    285, 270,
+    285, 990,
     320, 390,
     300, 490
 );
