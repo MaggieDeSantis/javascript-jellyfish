@@ -18,6 +18,8 @@ let targetX = 300;
 let targetY = 300;
 let clickedTarget = false;
 
+let propulsion = 0;
+let tilt = 0;
 
 for (let i = 0; i < 30; i++) {
     particles.push({
@@ -114,7 +116,7 @@ function drawBell() {
 
     let pulseStrength = Math.min(distance / 75, 4);
 
-    pulse = Math.sin(time * 2) * pulseStrength;
+    pulse = Math.sin(time * 3) * pulseStrength;
 
     ctx.beginPath();
 
@@ -151,7 +153,9 @@ function drawBell() {
 
 function drawTentacle(x, length, direction) {
 
-    let sway = Math.sin(time + x * 0.005) * 15 * direction;
+    let drag = propulsion * 25;
+
+    let sway = Math.sin(time + x * 0.005) * 5 * direction - drag * direction;
 
     ctx.beginPath();
 
@@ -191,8 +195,10 @@ function drawTentacle(x, length, direction) {
 }
 
 function drawArm(x, direction) {
+
+    let armDrag = propulsion * 10;
     
-    let armSway = Math.sin(time + 10 * 5) * 9 * direction;
+    let armSway = Math.sin(time + 10 * 5) * 9 * direction - armDrag * direction;
 
     ctx.beginPath();
 
@@ -242,33 +248,43 @@ function animate(){
         targetX = 400 + Math.sin(time * .5) * 180;
         targetY = 400 + Math.cos(time * .5) * 120;
     }
-    
-    jellyX += ((targetX - 400)  - jellyX) * 0.0005;
-    jellyY += ((targetY - 400)  - jellyY) * 0.0005;
+    propulsion = (Math.sin(time * 3) + 1) / 2; 
+
+    jellyX += ((targetX - 400)  - jellyX) * (0.0002 + propulsion * 0.0015);
+    jellyY += ((targetY - 400)  - jellyY) * (0.0002 + propulsion * 0.0015);
 
     let swimX = Math.sin(time * 1) * 5;
-    let swimY = Math.cos(time * 3) * 5; 
+    let swimY = Math.cos(time * 2) * 5; 
 
+    let distanceX = (targetX - 400) - jellyX;
+    let distanceY = (targetY - 400) - jellyY;
+
+    let targetTilt = distanceX * 0.0005;
+
+    targetTilt = Math.max(-0.08, Math.min(0.08, targetTilt));
+
+    tilt += (targetTilt - tilt) * 0.01;
+
+    distance = Math.sqrt(
+        distanceX * distanceX +
+        distanceY * distanceY
+    );
     ctx.save();
     ctx.translate(
         jellyX + swimX, 
         floatY + jellyY + swimY
     );
 
-    let distanceX = (targetX - 400) - jellyX;
-    let distanceY = (targetY - 400) - jellyY;
-
-    distance = Math.sqrt(
-        distanceX * distanceX +
-        distanceY * distanceY
-    );
+    ctx.translate(300, 300);
+    ctx.rotate(tilt);
+    ctx.translate(-300, -300);
 
     drawArm(275, .9);
     drawArm(325, -.9)
 
-    drawTentacle(250 - pulse / 5, 450, .05);
-    drawTentacle(300, 475, 1);
-    drawTentacle(350 + pulse / 1, 450, .05);
+    drawTentacle(250 - pulse / 5, 450, -0.65);
+    drawTentacle(300, 475, .5);
+    drawTentacle(350 + pulse / 1, 450, -0.58);
 
     drawBell();
     
