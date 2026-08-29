@@ -10,9 +10,9 @@ body {
 canvas {
     background: linear-gradient(
         to bottom,
-        #426074 25%,
-        #233e79 45%,
-        #091422 85%
+        #27548f 21%,
+        #1a2f5c 40%,
+        #02060a 75%
     );
     border: 2px solid #000000; 
 }

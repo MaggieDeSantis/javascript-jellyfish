@@ -3,6 +3,22 @@ const ctx = canvas.getContext("2d");
 
 const particles = [];
 
+let time = 0;
+let pulse = 0;
+let floatY = 0;
+let distance = 0
+
+let mouseX = 300;
+let mouseY = 300;
+
+let jellyX = 0;
+let jellyY = 0;
+
+let targetX = 300;
+let targetY = 300;
+let clickedTarget = false;
+
+
 for (let i = 0; i < 30; i++) {
     particles.push({
         x: Math.random() * canvas.width,
@@ -66,7 +82,7 @@ function drawLightRays() {
     ctx.closePath();
     ctx.fill();
 
-    ctx.fillStyle = "rgba(171, 192, 228, 0.01)";
+    ctx.fillStyle = "rgba(208, 218, 236, 0.01)";
 
     ctx.beginPath();
     ctx.moveTo(80, 0);
@@ -96,7 +112,9 @@ ctx.lineCap = "round";
 //jellyfish dome//
 function drawBell() {
 
-    pulse = Math.sin(time) * 1;
+    let pulseStrength = Math.min(distance / 75, 4);
+
+    pulse = Math.sin(time * 2) * pulseStrength;
 
     ctx.beginPath();
 
@@ -113,9 +131,9 @@ function drawBell() {
     ctx.quadraticCurveTo(275 - pulse, 275, 250 - pulse, 255);
     ctx.quadraticCurveTo(200 - pulse, 270, 200 - pulse, 250);
 
-    ctx.fillStyle = "rgba(106, 89, 136, 0.9)";
+    ctx.fillStyle = "rgba(86, 29, 100, 0.4)";
     
-    ctx.shadowColor = "rgba(209, 123, 185, 0.83)";
+    ctx.shadowColor = "rgba(63, 250, 219, 5)";
     ctx.shadowBlur = 45;
 
     ctx.fill();
@@ -129,19 +147,7 @@ function drawBell() {
 
 }
 //jellyfish danglies//
-let time = 0;
-let pulse = 0;
-let floatY = 0;
 
-let mouseX = 300;
-let mouseY = 300;
-
-let jellyX = 0;
-let jellyY = 0;
-
-let targetX = 300;
-let targetY = 300;
-let clickedTarget = false;
 
 function drawTentacle(x, length, direction) {
 
@@ -165,7 +171,7 @@ function drawTentacle(x, length, direction) {
 
     ctx.closePath();
         
-    ctx.fillStyle =  "rgba(180, 140, 255, 0.18)";
+    ctx.fillStyle =  "rgba(125, 96, 180, 0.45)";
     ctx.fill();
     ctx.stroke();
 
@@ -190,7 +196,7 @@ function drawArm(x, direction) {
 
     ctx.beginPath();
 
-    ctx.moveTo(x - 5, 260);
+    ctx.moveTo(x - 4, 265);
 
     ctx.bezierCurveTo(
         x - .07 + armSway, 300,
@@ -201,12 +207,12 @@ function drawArm(x, direction) {
     ctx.bezierCurveTo(
         x + .05 + armSway, 335,
         x + 5 - armSway, 300,
-        x + 5, 260
+        x + 5, 265
     );
 
     ctx.closePath();
 
-    ctx.fillStyle = "rgba(145, 135, 163, 0.50";
+    ctx.fillStyle = "rgba(133, 108, 180, 0.5)";
     ctx.fill();
 
     ctx.stroke();
@@ -233,15 +239,29 @@ function animate(){
     floatY = Math.sin(time * .09 ) * 15;
 
     if (!clickedTarget) {
-        targetX = 300 + Math.sin(time * .5) * 180;
-        targetY = 300 + Math.cos(time * .5) * 120;
+        targetX = 400 + Math.sin(time * .5) * 180;
+        targetY = 400 + Math.cos(time * .5) * 120;
     }
     
-    jellyX += ((targetX - 300)  - jellyX) * 0.001;
-    jellyY += ((targetY - 300)  - jellyY) * 0.001;
+    jellyX += ((targetX - 400)  - jellyX) * 0.0005;
+    jellyY += ((targetY - 400)  - jellyY) * 0.0005;
+
+    let swimX = Math.sin(time * 1) * 5;
+    let swimY = Math.cos(time * 3) * 5; 
 
     ctx.save();
-    ctx.translate(jellyX, floatY + jellyY);
+    ctx.translate(
+        jellyX + swimX, 
+        floatY + jellyY + swimY
+    );
+
+    let distanceX = (targetX - 400) - jellyX;
+    let distanceY = (targetY - 400) - jellyY;
+
+    distance = Math.sqrt(
+        distanceX * distanceX +
+        distanceY * distanceY
+    );
 
     drawArm(275, .9);
     drawArm(325, -.9)
