@@ -35,14 +35,60 @@ function drawParticles() {
             Math.PI * 2
         );
 
-        ctx.fillStyle = "rgba(46, 50, 66, 0.31)";
+        ctx.fillStyle = "rgba(75, 111, 126, 0.31)";
         ctx.fill();
     }
 
     ctx.restore();
 }
 
-ctx.strokeStyle = "#6e5b7ad3";
+function drawLightRays() {
+
+    ctx.save();
+
+    let raySway = Math.sin(time * 0.3) * 60;
+
+    ctx.fillStyle = "rgba(93, 139, 224, 0.01)";
+
+    ctx.beginPath();
+    ctx.moveTo(150, 0);
+    ctx.lineTo(260, 0);
+    ctx.lineTo(380 + raySway, 600);
+    ctx.lineTo(180 + raySway, 600);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(450, 0);
+    ctx.lineTo(510, 0);
+    ctx.lineTo(600 + raySway, 600);
+    ctx.lineTo(520 + raySway, 600);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.fillStyle = "rgba(171, 192, 228, 0.01)";
+
+    ctx.beginPath();
+    ctx.moveTo(80, 0);
+    ctx.lineTo(60, 0);
+    ctx.lineTo(80 + raySway, 600);
+    ctx.lineTo(80 + raySway, 600);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(350, 0);
+    ctx.lineTo(410, 0);
+    ctx.lineTo(400 + raySway, 600);
+    ctx.lineTo(400 + raySway, 600);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.restore();
+
+}
+
+ctx.strokeStyle = "#50226d81";
 ctx.lineWidth = 2;
 ctx.lineJoin = "round";
 ctx.lineCap = "round";
@@ -67,9 +113,9 @@ function drawBell() {
     ctx.quadraticCurveTo(275 - pulse, 275, 250 - pulse, 255);
     ctx.quadraticCurveTo(200 - pulse, 270, 200 - pulse, 250);
 
-    ctx.fillStyle = "rgba(61, 63, 92, 0.9)";
+    ctx.fillStyle = "rgba(106, 89, 136, 0.9)";
     
-    ctx.shadowColor = "rgba(110, 64, 97, 0.83)";
+    ctx.shadowColor = "rgba(209, 123, 185, 0.83)";
     ctx.shadowBlur = 45;
 
     ctx.fill();
@@ -86,6 +132,16 @@ function drawBell() {
 let time = 0;
 let pulse = 0;
 let floatY = 0;
+
+let mouseX = 300;
+let mouseY = 300;
+
+let jellyX = 0;
+let jellyY = 0;
+
+let targetX = 300;
+let targetY = 300;
+let clickedTarget = false;
 
 function drawTentacle(x, length, direction) {
 
@@ -130,7 +186,7 @@ function drawTentacle(x, length, direction) {
 
 function drawArm(x, direction) {
     
-    let armSway = Math.sin(time + 1 * 5) * 9 * direction;
+    let armSway = Math.sin(time + 10 * 5) * 9 * direction;
 
     ctx.beginPath();
 
@@ -144,7 +200,7 @@ function drawArm(x, direction) {
 
     ctx.bezierCurveTo(
         x + .05 + armSway, 335,
-        x + 1 - armSway, 300,
+        x + 5 - armSway, 300,
         x + 5, 260
     );
 
@@ -157,16 +213,35 @@ function drawArm(x, direction) {
 
 }
 
+canvas.addEventListener("click", function(event){
+
+    const rect = canvas.getBoundingClientRect();
+
+    targetX = (event.clientX - rect.left) * (canvas.width / rect.width);
+    targetY = (event.clientY - rect.top) * (canvas.height / rect.height);
+
+    clickedTarget = true;
+});
+
 function animate(){
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
+    drawLightRays(); 
     drawParticles();
 
-    floatY = Math.sin(time * 0.5) * 15;
+    floatY = Math.sin(time * .09 ) * 15;
+
+    if (!clickedTarget) {
+        targetX = 300 + Math.sin(time * .5) * 180;
+        targetY = 300 + Math.cos(time * .5) * 120;
+    }
     
+    jellyX += ((targetX - 300)  - jellyX) * 0.001;
+    jellyY += ((targetY - 300)  - jellyY) * 0.001;
+
     ctx.save();
-    ctx.translate(0, floatY);
+    ctx.translate(jellyX, floatY + jellyY);
 
     drawArm(275, .9);
     drawArm(325, -.9)
